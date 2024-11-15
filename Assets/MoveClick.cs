@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(Transform))]
 public class MoveClick : MonoBehaviour
 {
     public GameObject objectToMove;
