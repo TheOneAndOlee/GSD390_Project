@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class KeyboardMove : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class KeyboardMove : MonoBehaviour
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
     public KeyCode dashKey = KeyCode.E;
+    public KeyCode restartKey = KeyCode.R;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -48,7 +50,8 @@ public class KeyboardMove : MonoBehaviour
 
     private void Update()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, floor);
+
+        //Debug.Log(grounded);
 
         MyInput();
         speedControl();
@@ -61,7 +64,22 @@ public class KeyboardMove : MonoBehaviour
             rb.drag = 0;
         }
     }
-    
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == 10)
+        {
+            grounded = true;
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.layer == 10)
+        {
+            grounded = false;
+        }
+    }
+
     private void FixedUpdate()
     {
         movePlayer();
@@ -72,6 +90,11 @@ public class KeyboardMove : MonoBehaviour
         // Get the input from the WASD keys
         HorizontalInput = Input.GetAxisRaw("Horizontal");
         VerticalInput = Input.GetAxisRaw("Vertical");
+
+        if (Input.GetKeyDown(restartKey))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
