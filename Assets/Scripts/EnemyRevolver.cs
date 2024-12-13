@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class EnemyRevolver : MonoBehaviour
 {
+
+    [SerializeField]
+    private Material tracerMaterial;
+
     [SerializeField]
     private GameObject bulletPrefab;
 
@@ -22,9 +26,19 @@ public class EnemyRevolver : MonoBehaviour
     private bool canShoot = true;
 
     // Start is called before the first frame update
-    private void Awake()
+    private void Start()
     {
+        
+    }
 
+    private void AddBulletTracer(GameObject bullet)
+    {
+        TrailRenderer tracer = bullet.GetComponent<TrailRenderer>();
+        tracer.material = tracerMaterial;
+        tracer.time = 0.1f;
+        tracer.startWidth = 0.1f;
+        tracer.endWidth = 0.05f;
+        tracer.minVertexDistance = 0.1f;
     }
 
     // Update is called once per frame
@@ -40,6 +54,11 @@ public class EnemyRevolver : MonoBehaviour
         }
     }
 
+    private IEnumerator DelayedStart(int delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+    }
+
     private IEnumerator Shoot()
     {
         canShoot = false;
@@ -49,6 +68,9 @@ public class EnemyRevolver : MonoBehaviour
 
         var bulletRB = bulletInstance.GetComponent<Rigidbody>();
         Vector3 bulletDirection = bulletRB.velocity;
+
+        AddBulletTracer(bulletInstance);
+
         StartCoroutine(BulletTravel(bulletInstance));
 
         yield return new WaitForSeconds(3);

@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class RevolverData : MonoBehaviour
 {
+
+    [SerializeField]
+    private Material tracerMaterial;
+
     [SerializeField]
     private GameObject bulletPrefab;
 
@@ -34,9 +38,25 @@ public class RevolverData : MonoBehaviour
             bulletInstance.transform.position = bulletSpawn.transform.position;
 
             var bulletRB = bulletInstance.GetComponent<Rigidbody>();
-            Vector3 bulletDirection = bulletRB.velocity;                    
+            Vector3 bulletDirection = bulletRB.velocity;
+
+            AddBulletTracer(bulletInstance);
+
             StartCoroutine(BulletTravel(bulletInstance));
         }
+    }
+
+    private void AddBulletTracer(GameObject bullet)
+    {
+
+        TrailRenderer tracer = bullet.GetComponent<TrailRenderer>();
+        tracer.material = tracerMaterial;
+        tracer.time = 0.05f;
+        tracer.startWidth = 0.05f;
+        tracer.endWidth = 0.05f;
+        tracer.minVertexDistance = 0.1f;
+
+        tracer.alignment = LineAlignment.View;
     }
 
     private IEnumerator BulletTravel(GameObject bulletInstance)

@@ -1685,6 +1685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34c227dbb761b1a48aaede183ef1b9fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tracerMaterial: {fileID: 2100000, guid: c4d872bee47edc540a103739ca09f4dc, type: 2}
   bulletPrefab: {fileID: 353536572500914463, guid: 2495c5e759683d54db4fddcdf1d130b5, type: 3}
   bulletSpeed: 30
   mainCamera: {fileID: 140622199}
@@ -2473,6 +2474,10 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1063049635}
+    - target: {fileID: 7250189208110915059, guid: 6d09adb2f3650e34eaebb1d8b14233c2, type: 3}
+      propertyPath: tracerMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: c4d872bee47edc540a103739ca09f4dc, type: 2}
     - target: {fileID: 8241688828234456736, guid: 6d09adb2f3650e34eaebb1d8b14233c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 17.37
