@@ -1112,7 +1112,7 @@ GameObject:
   - component: {fileID: 866206358}
   - component: {fileID: 866206357}
   - component: {fileID: 866206356}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1355,7 +1355,7 @@ GameObject:
   - component: {fileID: 1199735426}
   - component: {fileID: 1199735425}
   - component: {fileID: 1199735424}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1690,6 +1690,7 @@ MonoBehaviour:
   bulletSpeed: 30
   mainCamera: {fileID: 140622199}
   bulletSpawn: {fileID: 2095937058}
+  bulletLifespan: 3
 --- !u!1 &1328148049
 GameObject:
   m_ObjectHideFlags: 0
@@ -1836,7 +1837,7 @@ GameObject:
   - component: {fileID: 1462143197}
   - component: {fileID: 1462143196}
   - component: {fileID: 1462143195}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2333,7 +2334,7 @@ GameObject:
   - component: {fileID: 2030106927}
   - component: {fileID: 2030106926}
   - component: {fileID: 2030106925}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

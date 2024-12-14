@@ -23,6 +23,11 @@ public class RevolverData : MonoBehaviour
     [SerializeField]
     private GameObject bulletSpawn;
 
+    [SerializeField]
+    private float bulletLifespan;
+
+    private bool hasRicocheted = false;
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -40,6 +45,9 @@ public class RevolverData : MonoBehaviour
             var bulletRB = bulletInstance.GetComponent<Rigidbody>();
             Vector3 bulletDirection = bulletRB.velocity;
 
+            bulletRB.collisionDetectionMode = CollisionDetectionMode.Continuous;
+
+
             AddBulletTracer(bulletInstance);
 
             StartCoroutine(BulletTravel(bulletInstance));
@@ -48,15 +56,12 @@ public class RevolverData : MonoBehaviour
 
     private void AddBulletTracer(GameObject bullet)
     {
-
         TrailRenderer tracer = bullet.GetComponent<TrailRenderer>();
         tracer.material = tracerMaterial;
-        tracer.time = 0.05f;
-        tracer.startWidth = 0.05f;
+        tracer.time = 0.1f;
+        tracer.startWidth = 0.1f;
         tracer.endWidth = 0.05f;
         tracer.minVertexDistance = 0.1f;
-
-        tracer.alignment = LineAlignment.View;
     }
 
     private IEnumerator BulletTravel(GameObject bulletInstance)
@@ -64,13 +69,25 @@ public class RevolverData : MonoBehaviour
         BoxCollider bulletCollider = bulletInstance.GetComponent<BoxCollider>();
         float bulletRadius = bulletCollider.bounds.extents.magnitude;
 
+
         Vector3 originalPosition = bulletInstance.transform.position;
-        Vector3 originalForward = mainCamera.transform.forward;
+        Vector3 bulletDirection = mainCamera.transform.forward;
+
+        float elapsedTime = 0f;
 
         while (true)
         {
-            bulletInstance.transform.position += (originalForward * bulletSpeed * Time.deltaTime);
+            bulletInstance.transform.position += (bulletDirection * bulletSpeed * Time.deltaTime);
                 
+            elapsedTime += Time.deltaTime;
+
+            if (elapsedTime >= bulletLifespan)
+            {
+                //Debug.Log("Bullet Expired");
+                Destroy(bulletInstance);
+                yield break;
+            }
+
             if (Vector3.Distance(bulletInstance.transform.position, originalPosition) > maxBulletDistance)
             {
                 //Debug.Log("Bullet Travelled Too Far");
@@ -90,12 +107,33 @@ public class RevolverData : MonoBehaviour
                     if (hitCollider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                     {
                         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+                        Destroy(bulletInstance);
+                        yield break;
                     }
-                    //Debug.Log("Bullet Hit Something");
-                    Destroy(bulletInstance);
-                    yield break;
+                    else if (hitCollider.gameObject.layer == LayerMask.NameToLayer("Wall") && !hasRicocheted)
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(bulletInstance.transform.position, bulletDirection, out hit, bulletRadius))
+                        {
+                            bulletDirection = Vector3.Reflect(bulletDirection, hit.normal);
+                            bulletInstance.transform.forward = bulletDirection;
+                            hasRicocheted = true;
+                            //Debug.Log("Bullet Richocheted");
+
+                            bulletInstance.GetComponent<Rigidbody>().velocity = bulletDirection * bulletSpeed;
+
+                        }
+                    }
+                    else
+                    {
+                        //Debug.Log("Bullet hit a surface");
+                        Destroy(bulletInstance);
+                        yield break;
+                    }
+                    hasRicocheted = false;
                 }
             }
+
             yield return null;
         }
     }
